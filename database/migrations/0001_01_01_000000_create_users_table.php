@@ -12,13 +12,35 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            $table->ulid('id')->primary();
+            $table->string('full_name');
+            $table->string('username')->unique();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('avatar')->nullable();
+            $table->string('bio')->nullable();
+            $table->string('otp')->nullable();
+            $table->enum('status', ['active', 'deactivated', 'suspended'])->default('active');
+            $table->foreignUlid('organisation_id')->constrained('organisations')->cascadeOnDelete();
+            $table->boolean('email_notification_enabled')->default(false);
+            $table->boolean('push_notification_enabled')->default(false);
             $table->rememberToken();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('last_login');
+            $table->timestamp('otp_verified_at')->nullable();
+            $table->timestamp('otp_expires_at')->nullable();
             $table->timestamps();
+
+
+
+            $table->index('organisation_id');
+            $table->index('status');
+            $table->index('last_login');
+            $table->index('email_notification_enabled');
+            $table->index('push_notification_enabled');
+            $table->index('otp');
+            $table->index('otp_verified_at');
+            $table->index('otp_expires_at');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -29,7 +51,7 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->foreignUlid('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');

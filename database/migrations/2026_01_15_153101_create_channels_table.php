@@ -12,8 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('channels', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
+            $table->string('name');
             $table->timestamps();
+
+            $table->index('name');
         });
     }
 

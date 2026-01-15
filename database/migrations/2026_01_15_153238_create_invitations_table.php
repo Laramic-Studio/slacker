@@ -12,8 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('invitations', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
+            $table->foreignUlid('organisation_id')->constrained('organisations')->cascadeOnDelete();
+            $table->string('email');
+            $table->string('token')->unique();
+            $table->timestamp('expires_at')->nullable();
+            $table->timestamp('sent_at')->nullable();
             $table->timestamps();
+
+            $table->index('organisation_id');
+            $table->index('email');
+            $table->index('sent_at');
+            $table->index('expires_at');
         });
     }
 

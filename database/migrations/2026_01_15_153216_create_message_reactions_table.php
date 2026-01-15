@@ -12,8 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('message_reactions', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
+            $table->foreignUlid('message_id')->constrained('messages')->cascadeOnDelete();
+            $table->foreignUlid('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('reaction_type');
             $table->timestamps();
+
+            $table->index('message_id');
+            $table->index('user_id');
         });
     }
 

@@ -8,6 +8,30 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * App\Models\User
+ *
+ * @property string $id
+ * @property string $full_name
+ * @property string $username
+ * @property string|null $avatar
+ * @property string $email
+ * @property string $password
+ * @property string $organisation_id
+ * @property string $bio
+ * @property string $status
+ * @property string $password
+ * @property string $otp
+ * @property bool $email_notifications_enabled
+ * @property bool $push_notifications_enabled
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $last_login
+ * @property \Illuminate\Support\Carbon|null $otp_expires_at
+ * @property \Illuminate\Support\Carbon|null $otp_verified_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */

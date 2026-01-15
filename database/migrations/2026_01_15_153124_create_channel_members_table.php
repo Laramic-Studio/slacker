@@ -12,8 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('channel_members', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
+            $table->foreignUlid('channel_id')->constrained('channels')->cascadeOnDelete();
+            $table->foreignUlid('user_id')->constrained('users')->cascadeOnDelete();
+            $table->timestamp('joined_at')->useCurrent();
             $table->timestamps();
+
+            $table->index('channel_id');
+            $table->index('user_id');
+            $table->index('joined_at');
         });
     }
 
