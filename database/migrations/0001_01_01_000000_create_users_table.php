@@ -21,12 +21,12 @@ return new class extends Migration
             $table->string('bio')->nullable();
             $table->string('otp')->nullable();
             $table->enum('status', ['active', 'deactivated', 'suspended'])->default('active');
-            $table->foreignUlid('organisation_id')->constrained('organisations')->cascadeOnDelete();
+            $table->foreignUlid('organisation_id')->nullable()->constrained('organisations')->cascadeOnDelete();
             $table->boolean('email_notification_enabled')->default(false);
             $table->boolean('push_notification_enabled')->default(false);
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
-            $table->timestamp('last_login');
+            $table->timestamp('last_login')->nullable();
             $table->timestamp('otp_verified_at')->nullable();
             $table->timestamp('otp_expires_at')->nullable();
             $table->timestamps();

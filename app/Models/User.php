@@ -3,6 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Notifications\EmailVerificationNotification;
+use App\Notifications\WelcomeNotification;
+use App\Observers\UserObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -32,21 +38,11 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @mixin \Eloquent
  */
+#[ObservedBy(UserObserver::class)]
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    use HasFactory, Notifiable, HasUlids;
 
     /**
      * The attributes that should be hidden for serialization.
@@ -72,7 +68,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
-      /**
+    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
@@ -90,5 +86,28 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new EmailVerificationNotification());
+    }
+
+    public function verifyEmail(): void
+    {
+        $this->update([
+            'email_verified_at' => now(),
+            'otp' => null,
+            'otp_expires_at' => null,
+        ]);
+        $this->notify(new WelcomeNotification());
+    }
+
+    public function updateLastLogin()
+    {
+        $this->update([
+            'last_login' => now(),
+        ]);
     }
 }

@@ -38,12 +38,13 @@ trait ApiResponseTrait
     protected function respondWithCustomData(string $message, $data, $code = 200): JsonResponse
     {
         $response = [
+            'success' => true,
             'message' => $message,
             'code' => $code,
             'data' => $data,
             'meta' => ['timestamp' => $this->getTimestampInMilliseconds()],
         ];
-        return $this->respondWithE2EE($response, $code);
+        return new JsonResponse($response, $code);
     }
 
     protected function responseWithError(string $message,  $error, int|string $code = 200): JsonResponse
@@ -104,7 +105,7 @@ trait ApiResponseTrait
     protected function respondWithItem(Model|array $item, $additionalData = []): mixed
     {
         $data = (new $this->resourceItem($item))->additional(
-            [ ...$additionalData, 'meta' => ['timestamp' => $this->getTimestampInMilliseconds()]]
+            [...$additionalData, 'meta' => ['timestamp' => $this->getTimestampInMilliseconds()]]
         );
         return $this->respondWithE2EE($data);
     }
@@ -126,5 +127,4 @@ trait ApiResponseTrait
     {
         return new JsonResponse($response, $code);
     }
-
 }
