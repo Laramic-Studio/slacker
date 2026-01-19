@@ -15,5 +15,4 @@ Route::prefix('auth')->group(function () {
         Route::post("/refresh", [App\Http\Controllers\V1\Auth\AuthSessionController::class, 'refresh']);
         Route::get("/me", [App\Http\Controllers\V1\Auth\AuthSessionController::class, 'me']);
     });
-    
 });

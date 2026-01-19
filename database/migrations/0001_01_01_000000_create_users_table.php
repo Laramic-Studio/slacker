@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreignUlid('organisation_id')->nullable()->constrained('organisations')->cascadeOnDelete();
             $table->boolean('email_notification_enabled')->default(false);
             $table->boolean('push_notification_enabled')->default(false);
+            $table->boolean('was_invited')->default(false);
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_login')->nullable();

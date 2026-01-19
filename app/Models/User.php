@@ -88,6 +88,17 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public function organisation()
+    {
+        return $this->belongsTo(Organisation::class);
+    }
+
+
+
+    public function hasWorkspace(): bool
+    {
+        return $this->organisation()->exists();
+    }
 
     public function sendEmailVerificationNotification()
     {
