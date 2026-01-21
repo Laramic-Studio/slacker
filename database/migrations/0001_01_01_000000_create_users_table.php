@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('bio')->nullable();
             $table->string('otp')->nullable();
+            $table->string('reset_token')->nullable();
             $table->enum('status', ['active', 'deactivated', 'suspended'])->default('active');
             $table->foreignUlid('organisation_id')->nullable()->constrained('organisations')->cascadeOnDelete();
             $table->boolean('email_notification_enabled')->default(false);
@@ -30,6 +31,7 @@ return new class extends Migration
             $table->timestamp('last_login')->nullable();
             $table->timestamp('otp_verified_at')->nullable();
             $table->timestamp('otp_expires_at')->nullable();
+            $table->timestamp('reset_token_expires_at')->nullable();
             $table->timestamps();
 
 

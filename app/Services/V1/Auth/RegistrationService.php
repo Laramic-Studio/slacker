@@ -60,13 +60,24 @@ class RegistrationService
                 ->where('otp_expires_at', '>', now())
                 ->first();
 
-            if (!$user) throw new ClientErrorException("Invalid otp");
+            if (!$user) throw new ClientErrorException("Invalid or expire otp.");
 
             $user->verifyEmail();
 
             return [
                 'user' => $user->fresh(),
             ];
+        } catch (Exception $th) {
+            throw $th;
+        }
+    }
+
+    public function resendOtp()
+    {
+        try {
+            $user = authUser();
+            $user->sendEmailVerificationNotification();
+            return [];
         } catch (Exception $th) {
             throw $th;
         }

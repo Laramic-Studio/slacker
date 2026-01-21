@@ -12,6 +12,10 @@ Route::prefix('v1')->group(function () {
             Route::post("/invite-members", [App\Http\Controllers\V1\Workspace\WorkspaceController::class, 'inviteMembers']);
             Route::post("/join", [App\Http\Controllers\V1\Workspace\WorkspaceController::class, 'joinWorkspace']);
         });
+
+        Route::prefix('upload')->group(function () {
+            Route::post("/file", [App\Http\Controllers\V1\Attachment\AttachmentController::class, 'uploadFile']);
+        });
     });
 
 

@@ -23,4 +23,12 @@ class RegistrationController extends Controller
         $response = $this->registrationService->verifyEmail($request->validated());
         return $this->respondWithCustomData('Email verified successfully.', $response);
     }
+
+
+    public function resendOtp() {
+        $response = $this->registrationService->resendOtp();
+        return $this->respondWithCustomData('Otp resend successfully.', $response);
+    }
+
+    
 }

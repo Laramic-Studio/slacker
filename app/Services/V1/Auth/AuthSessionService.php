@@ -3,6 +3,7 @@
 namespace App\Services\V1\Auth;
 
 use App\Exceptions\ClientErrorException;
+use App\Models\User;
 use Exception;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
@@ -91,6 +92,57 @@ class AuthSessionService
             return [
                 'user' => JWTAuth::user(),
             ];
+        } catch (Exception $th) {
+            throw $th;
+        }
+    }
+
+    /**
+     * Sends a password reset email to the user.
+     *
+     * @param array $payload The request body containing the user's email.
+     * @return array An empty array.
+     * @throws ClientErrorException If the user's email is invalid.
+     */
+    public function sendPasswordResetUr(array $payload)
+    {
+        try {
+            $user = User::where('email', $payload['email'])->first();
+
+            if (!$user) throw new ClientErrorException("Invalid email");
+
+            $user->generatePassswordResetToken();
+
+            return [];
+        } catch (Exception $th) {
+            throw $th;
+        }
+    }
+
+    /**
+     * Reset the user's password using the reset token provided in the request body.
+     *
+     * @param array $payload The request body containing the reset token and new password.
+     * @return array The response containing an empty array.
+     * @throws ClientErrorException If the reset token is invalid or expired.
+     */
+    public function resetPassword(array $payload)
+    {
+        try {
+            $user = User::query()
+                ->where('reset_token', $payload['reset_token'])
+                ->where('reset_token_expires_at', '>', now())
+                ->first();
+
+            if (!$user) throw new ClientErrorException("Invalid or expired reset token");
+
+            $user->update([
+                'password' => $payload['password'],
+                'reset_token' => null,
+                'reset_token_expires_at' => null
+            ]);
+
+            return [];
         } catch (Exception $th) {
             throw $th;
         }

@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('channels', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name');
+            $table->enum('visibility', ['public', 'private'])->default('private');
+            $table->foreignUlid('organisation_id')->nullable()->constrained('organisations')->cascadeOnDelete();
             $table->timestamps();
+
 
             $table->index('name');
         });

@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Notifications\EmailVerificationNotification;
+use App\Notifications\ForgotPasswordNotification;
 use App\Notifications\WelcomeNotification;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -102,6 +103,10 @@ class User extends Authenticatable implements JWTSubject
 
     public function sendEmailVerificationNotification()
     {
+        $this->update([
+            'otp' => generateRandom(6),
+            'otp_expires_at' => now()->addMinutes(30),
+        ]);
         $this->notify(new EmailVerificationNotification());
     }
 
@@ -120,5 +125,14 @@ class User extends Authenticatable implements JWTSubject
         $this->update([
             'last_login' => now(),
         ]);
+    }
+
+    public function generatePassswordResetToken()
+    {
+        $this->update([
+            'reset_token' => generateRandom(32),
+            'reset_token_expires_at' => now()->addMinutes(30),
+        ]);
+        $this->notify(new ForgotPasswordNotification());
     }
 }

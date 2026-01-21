@@ -3,10 +3,14 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
-function generateRandom(int $lenght = 12): string
+function generateRandom(int $lenght = 12, bool $type = false): string
 {
-    $words = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    return substr(str_shuffle(str_repeat($words, $lenght)), 0, $lenght);
+    if ($type) {
+        $words = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        return substr(str_shuffle(str_repeat($words, $lenght)), 0, $lenght);
+    } else {
+        return rand(10 ** ($lenght - 1), (10 ** $lenght) - 1);
+    }
 }
 
 function storeImage($image, $folder): string

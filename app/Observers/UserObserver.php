@@ -11,10 +11,6 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        $user->update([
-            'otp' => generateRandom(5),
-            'otp_expires_at' => now()->addMinutes(30),
-        ]);
         $user->sendEmailVerificationNotification();
     }
 

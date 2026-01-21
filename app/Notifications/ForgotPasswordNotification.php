@@ -2,21 +2,19 @@
 
 namespace App\Notifications;
 
-use App\Models\Invitation;
-use App\Models\Organisation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WorkspaceInvitationNotification extends Notification implements ShouldQueue
+class ForgotPasswordNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Organisation $workspace, public Invitation $invitation)
+    public function __construct()
     {
         //
     }
@@ -36,13 +34,7 @@ class WorkspaceInvitationNotification extends Notification implements ShouldQueu
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->subject('You are invited to join a workspace on Slacker')
-            ->markdown('emails.workspace.invite-notification', [
-                'user' => $notifiable,
-                'workspace' => $this->workspace,
-                'invitation' => $this->invitation,
-            ]);
+        return (new MailMessage)->markdown('emails.auth.forgot-password');
     }
 
     /**

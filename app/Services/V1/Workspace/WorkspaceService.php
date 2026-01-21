@@ -6,6 +6,7 @@ use App\Exceptions\ClientErrorException;
 use App\Models\Invitation;
 use App\Models\Organisation;
 use App\Models\User;
+use App\Services\V1\Attachment\AttachmentService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -25,18 +26,13 @@ class WorkspaceService
     {
         try {
             DB::beginTransaction();
-            $path = null;
             $user = authUser();
-
-            if (isset($data['logo'])) {
-                $path = storeImage($data['logo'], 'workspaces/logos');
-            }
 
             $workspace = Organisation::create([
                 'name' => $data['name'],
                 'slug' => Str::slug($data['name']) . '-' . Str::random(5),
                 'description' => $data['description'] ?? null,
-                'logo' => $path,
+                'visibility' => $data['visibility'],
             ]);
 
             $user->update([
@@ -79,7 +75,7 @@ class WorkspaceService
                     'email' => $email,
                     'username' => Str::before($email, '@') . '-' . Str::random(5),
                     'full_name' => Str::before($email, '@'),
-                    'password' => generateRandom(12),
+                    'password' => generateRandom(9),
                     'organisation_id' => $workspace->id,
                     'was_invited' => true,
                 ]);
@@ -87,7 +83,9 @@ class WorkspaceService
                 $user->notify(new \App\Notifications\WorkspaceInvitationNotification($email, $workspace, $invite));
             }
 
-            return [];
+            return [
+                'workspace' => $workspace,
+            ];
         } catch (Exception $th) {
             throw $th;
         }

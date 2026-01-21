@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('description')->nullable();
             $table->string('logo')->nullable();
+            $table->enum('visibility', ['public', 'private'])->default('private');
             $table->timestamps();
 
             $table->index('name');

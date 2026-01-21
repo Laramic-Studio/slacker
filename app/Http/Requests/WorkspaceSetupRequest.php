@@ -26,6 +26,7 @@ class WorkspaceSetupRequest extends FormRequest
             'domain' => 'nullable|string|max:100|unique:workspaces,domain',
             'description' => 'nullable|string|max:500',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'visibility' => 'required|in:public,private',
         ];
     }
 
