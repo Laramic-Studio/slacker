@@ -104,7 +104,7 @@ class WorkspaceService
             $workspaces = $user->organisation;
 
             return [
-                'workspaces' => $workspaces,
+                'workspace' => $workspaces,
             ];
         } catch (Exception $th) {
             throw $th;
